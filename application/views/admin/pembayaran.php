@@ -30,15 +30,15 @@
                     <td><?= $q->status_dp ?></td>
                     <td><?= $q->status_pelunasan ?></td>
                     <td><?= $q->grand_total ?></td>
-                    <form action="" method="post">
+                    <form action="<?= base_url('admin/updateshipping/' . $q->order_id) ?>" method="post">
                         <td>
-                            <input type="text" value="<?= $q->shipping_cost ?>">
+                            <input type="text" name="shippingcost" value="<?= $q->shipping_cost ?>">
                         </td>
                         <td><?= $q->dp_bill ?></td>
                         <td><?= $q->final_bill ?></td>
                         <td><img style="width: 200px;" src="<?= base_url('assets/img/resipayment/' . $q->resi_dp) ?>" alt=""></td>
                         <td><?= $q->resi_pelunasan ?></td>
-                        <td></td>
+                        <td><button><i class="far fa-edit"></i></button></td>
                     </form>
                 </tr>
             <?php } ?>

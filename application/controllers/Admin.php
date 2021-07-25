@@ -227,4 +227,15 @@ class Admin extends CI_Controller
             $this->db->update('product', $data);
         }
     }
+
+    public function updateshipping($order_id)
+    {
+        // echo $order_id;
+        $shipping = $this->input->post('shippingcost');
+        $data['payment'] = $this->db->get('payment')->result();
+        $this->db->set('shipping_cost', $shipping);
+        $this->db->where('order_id', $order_id);
+        $this->db->update('payment');
+        echo json_encode($data);
+    }
 }
