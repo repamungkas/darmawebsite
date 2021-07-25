@@ -1,0 +1,48 @@
+<div class="col-4">
+            <h3>Shopping information</h3>
+            <br>
+            <?php if (count($user) > 0) { ?>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Nama</label>
+                    <input type="text" id="nama" value="<?= $user['name'] ?>" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Alamat</label>
+                    <input type="text" id="alamat" value="<?= $user['address'] ?>" class=" form-control" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Email</label>
+                    <input type="email" id="email" value="<?= $user['email'] ?>" class=" form-control" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">No Handphone</label>
+                    <input type="text" id="no_hp" value="<?= $user['nohandphone'] ?>" class=" form-control" placeholder="Password">
+                </div>
+
+
+                <!-- <input type="hidden" id="nama" value="<?= $user['name'] ?>">
+                <input type="hidden" id="alamat" value="<?= $user['address'] ?>">
+                <input type="hidden" id="email" value="<?= $user['email'] ?>">
+                <input type="hidden" id="no_hp" value="<?= $user['nohandphone'] ?>"> -->
+            <?php } else { ?>
+                <form class="mb-5">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Nama</label>
+                        <input type="text" class="form-control" id="nama" aria-describedby="emailHelp" placeholder="nama">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Alamat</label>
+                        <input type="text" class="form-control" id="alamat" placeholder="alamat">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">No Handphone</label>
+                        <input type="text" class="form-control" id="no_hp" placeholder="no handphone">
+                    </div>
+                </form>
+            <?php } ?>
+        </div>

@@ -1,0 +1,68 @@
+table.table td a.edit {
+	color: #FFC107;
+}
+
+table.table td a.delete {
+	color: #F44336;
+}
+
+.product-container {
+	margin: 80px;
+	margin-bottom: 20px;
+	padding: 20px;
+}
+
+div.box {
+	width: 163px;
+	height: 163px;
+	margin-top: 5px;
+}
+
+.col-6.mycol {
+	max-width: 20%;
+}
+
+div.boxgambar {
+	width: 499px;
+	height: 499px;
+}
+
+div.col.mycol {
+	max-width: 100%;
+	height: 150px;
+
+}
+
+div.col-6.mycol1 {
+	max-width: 530px;
+}
+
+div.row.myrow {
+	padding-top: 5px;
+	margin-bottom: 100px;
+}
+
+p {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: normal;
+}
+
+div.form-group.myform {
+	max-width: 65%;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+
+a:hover {
+	text-decoration: underline;
+}
+
+
+sub {
+	content: "\a";
+	white-space: pre;
+}
+
