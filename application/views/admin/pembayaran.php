@@ -18,6 +18,8 @@
                 <th scope="col">Final Bill</th>
                 <th scope="col">Resi DP</th>
                 <th scope="col">Resi Pelunasan</th>
+                <th scope="col">Action</th>
+
             </tr>
         </thead>
         <tbody>
@@ -28,11 +30,16 @@
                     <td><?= $q->status_dp ?></td>
                     <td><?= $q->status_pelunasan ?></td>
                     <td><?= $q->grand_total ?></td>
-                    <td><?= $q->shipping_cost ?></td>
-                    <td><?= $q->dp_bill ?></td>
-                    <td><?= $q->final_bill ?></td>
-                    <td><img style="width: 200px;" src="<?= base_url('assets/img/resipayment/' . $q->resi_dp) ?>" alt=""></td>
-                    <td><?= $q->resi_pelunasan ?></td>
+                    <form action="" method="post">
+                        <td>
+                            <input type="text" value="<?= $q->shipping_cost ?>">
+                        </td>
+                        <td><?= $q->dp_bill ?></td>
+                        <td><?= $q->final_bill ?></td>
+                        <td><img style="width: 200px;" src="<?= base_url('assets/img/resipayment/' . $q->resi_dp) ?>" alt=""></td>
+                        <td><?= $q->resi_pelunasan ?></td>
+                        <td></td>
+                    </form>
                 </tr>
             <?php } ?>
         </tbody>
