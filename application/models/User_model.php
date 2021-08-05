@@ -6,7 +6,6 @@ class User_model extends CI_Model
     public $id;
     public $name;
     public $address;
-    public $image;
     public $email;
     public $nohandphone;
     public $password;
@@ -26,7 +25,6 @@ class User_model extends CI_Model
     {
         $this->name = htmlspecialchars($this->input->post('name', true));
         $this->address = $this->input->post('address');
-        $this->image = 'default.jpg';
         $this->email = htmlspecialchars($this->input->post('email'));
         $this->nohandphone = $this->input->post('nohandphone');
         $this->password = password_hash($this->input->post('password1'), PASSWORD_DEFAULT);

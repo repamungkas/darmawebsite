@@ -11,11 +11,6 @@
                 <a href="<?= base_url('product/sablon'); ?>" style="color: black;">Kardus dengan Sablon</a>
             </p>
         </div>
-        <div class="col-sm-2 pl-0 pr-0 text-center">
-            <p style="font-size: 12pt;">
-                <a href="<?= base_url('product/tenteng'); ?>" style="color: black;">Kardus Custom</a>
-            </p>
-        </div>
     </div>
 </div>
 

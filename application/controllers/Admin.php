@@ -9,6 +9,7 @@ class Admin extends CI_Controller
         $this->load->helper('url');
         $this->load->library('form_validation');
         $this->load->model('Product_model', 'pm');
+        $this->load->helper('download');
     }
 
     public function index()
@@ -26,10 +27,14 @@ class Admin extends CI_Controller
         $loginstatus = $this->session->userdata('email');
         if ($loginstatus) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-            $this->load->view('templates/admin_header', $data);
-            $this->load->view('admin/index', $data);
-            $this->load->view('templates/include_js');
-            $this->load->view('templates/admin_footer');
+            if ($data['user']['role_id'] != 1) {
+                redirect('home', 'refresh');
+            } else {
+                $this->load->view('templates/admin_header', $data);
+                $this->load->view('admin/order', $data);
+                // $this->load->view('templates/include_js');
+                $this->load->view('templates/admin_footer');
+            }
         } else {
             redirect('auth');
         }
@@ -37,6 +42,7 @@ class Admin extends CI_Controller
 
     public function user()
     {
+        $data['notif_amount'] = $this->get_notif_amount();
         $loginstatus = $this->session->userdata('email');
         if ($loginstatus) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
@@ -77,22 +83,40 @@ class Admin extends CI_Controller
         }
     }
 
-    public function delete_user($id)
+    public function deleteuser()
     {
         $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
             Users has been deleted!<button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button> </div>');
+
+        $id = $this->input->post('id_user');
         $this->db->delete('user', array('id' => $id));
         redirect('admin/user');
     }
 
     public function edituser($id)
     {
+        // var_dump($id);
         $this->load->model('User_model', 'usermodal');
         $data = $this->usermodal->edit_user($id);
         $data = json_encode($data);
         echo $data;
+    }
+
+    public function doedit()
+    {
+        $data = array(
+            'name' => $this->input->post('edit_name'),
+            'address' => $this->input->post('edit_address'),
+            'email' => $this->input->post('edit_email'),
+            'nohandphone' => $this->input->post('edit_nohandphone'),
+            'role_id' => $this->input->post('edit_role_id')
+        );
+        $this->db->where('id', $this->input->post('id_usr'));
+        $this->db->update('user', $data);
+
+        redirect('admin/user', 'refresh');
     }
 
     public function get_notif_amount()
@@ -108,6 +132,8 @@ class Admin extends CI_Controller
         }
         return $data['notif_amount'];
     }
+
+    //fungsi produkk
 
     public function product()
     {
@@ -131,6 +157,42 @@ class Admin extends CI_Controller
         redirect('admin/product');
     }
 
+    public function editproduk($id)
+    {
+        $this->load->model('Product_model', 'produkmodel');
+        $data = $this->produkmodel->edit_produk($id);
+        // var_dump($data);
+        $data = json_encode($data);
+        echo $data;
+    }
+
+    public function doeditproduk()
+    {
+        $data = array(
+            'nama' => $this->input->post('edit_name'),
+            'model_produk' => $this->input->post('edit_model'),
+            'ukuran' => $this->input->post('edit_size'),
+            'harga' => $this->input->post('edit_price'),
+            'sku' => $this->input->post('edit_stok')
+        );
+        $this->db->where('id', $this->input->post('id_produk'));
+        $this->db->update('product', $data);
+
+        redirect('admin/product', 'refresh');
+    }
+
+    public function deleteproduk()
+    {
+        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
+            Produk has been deleted!<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button> </div>');
+        $id = $this->input->post('id_produk');
+        $this->db->delete('product', array('id' => $id));
+        redirect('admin/product');
+    }
+
+    //
     public function order()
     {
         $data['query'] = $this->pm->get_allorder();
@@ -149,9 +211,10 @@ class Admin extends CI_Controller
         $this->load->view('templates/admin_footer');
     }
 
-    public function pembayaran()
+    public function pembayaran($order_id)
     {
-        $data['querypayment'] = $this->db->get('payment')->result();
+        // echo $order_id;
+        $data['querypayment'] = $this->db->get_where('payment', ['order_id' => $order_id])->result();
         $data['query'] = $this->pm->get_allorder();
         $data['status_pemesanan'] = $this->pm->get_order_status();
         $counter = 0;
@@ -162,6 +225,13 @@ class Admin extends CI_Controller
                 $data['notif_amount'] = $counter;
             }
         }
+
+        $this->db->select('order_status');
+        $this->db->from('order');
+        $this->db->where('id', $order_id);
+        $order_status = $this->db->get()->row();
+        $data['order_status'] = $order_status->order_status;
+
         // foreach ($data['query'] as $q) {
         //     $this->db->select('*');
         //     $this->db->from('payment');
@@ -176,6 +246,53 @@ class Admin extends CI_Controller
         $this->load->view('templates/admin_footer');
     }
 
+    public function detailorder($order_id)
+    {
+        $this->db->select('
+            order_detail.order_id, 
+            order_detail.produk_id, 
+            product.model_produk, 
+            order_detail.type, 
+            order_detail.ukuran_sablon, 
+            order_detail.price, 
+            order_detail.pcs, 
+            order_detail.designlogo,
+            order_detail.warna,
+            order_detail.area_sablon,
+            order_detail.subtotal
+        ');
+        $this->db->from('order_detail');
+        $this->db->join('product', 'order_detail.produk_id = product.id');
+        $this->db->where('order_detail.order_id', $order_id);
+        $data['all_orderdetail'] = $this->db->get()->result();
+        $data['notif_amount'] = $this->get_notif_amount();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/admin_header', $data);
+        $this->load->view('admin/detailorder', $data);
+        $this->load->view('templates/admin_footer');
+        // echo json_encode($data['all_orderdetail']);
+    }
+
+    public function download($fileName)
+    {
+        $data = file_get_contents('assets/design/' . $fileName);
+        $name = $fileName;
+        force_download($name, $data);
+
+        // force_download($fileName, $data);
+        // // if ($fileName) {
+        // //     // check file exists    
+        // //     if (file_exists($file)) {
+        // //         // get file content
+        // //         //force download
+        // //         force_download($fileName, $data);
+        // //     } else {
+        // //         // Redirect to base url
+        // //         redirect(base_url('admin/detailorder'));
+        // //     }
+        // // }
+    }
+
     public function edit_status_pemesanan($status_id, $order_id)
     {
 
@@ -185,10 +302,17 @@ class Admin extends CI_Controller
         $this->db->where('id', $order_id);
         $this->db->update('order', $data);
 
-        if ($status_id == 2) {
+        if ($status_id >= 2) {
             $this->doconfirm($order_id, false);
             $data['result'] = $this->db->get('payment')->result();
             $this->db->set('status_dp', 1);
+            $this->db->where('order_id', $order_id);
+            $this->db->update('payment');
+        }
+
+        if ($status_id >= 6) {
+            $data['result'] = $this->db->get('payment')->result();
+            $this->db->set('status_pelunasan', 1);
             $this->db->where('order_id', $order_id);
             $this->db->update('payment');
         }
@@ -230,12 +354,18 @@ class Admin extends CI_Controller
 
     public function updateshipping($order_id)
     {
-        // echo $order_id;
-        $shipping = $this->input->post('shippingcost');
-        $data['payment'] = $this->db->get('payment')->result();
-        $this->db->set('shipping_cost', $shipping);
+        $shipping_cost = $this->input->post('shippingcost');
+        $payment_data = $this->db->get_where('payment', ['order_id' => $order_id])->row_array();
+        $grand_total = $payment_data['grand_total'];
+        $dp_bill = $payment_data['dp_bill'];
+        $final_bill = ($grand_total - $dp_bill) + $shipping_cost;
+
+        $data = array(
+            'shipping_cost' => $shipping_cost,
+            'final_bill' => $final_bill,
+        );
         $this->db->where('order_id', $order_id);
-        $this->db->update('payment');
-        echo json_encode($data);
+        $this->db->update('payment', $data);
+        redirect('admin/pembayaran/' . $order_id, 'refresh');
     }
 }

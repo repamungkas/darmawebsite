@@ -40,7 +40,7 @@ class Cart extends CI_Controller
             $this->session->unset_userdata('product_type');
         };
 
-        echo json_encode($this->session->userdata('product_type'));
+        // echo json_encode($this->session->userdata('product_type'));
 
         $this->cart->update($data);
         redirect('cart', 'refresh');

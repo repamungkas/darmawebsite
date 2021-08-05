@@ -1,7 +1,7 @@
 <div class="container" style="margin-top: 150px;">
     <h3 style="text-align: center; font-weight: bold;">Cart</h3>
     <!-- <?php echo json_encode($this->session->userdata('product_type')) ?> -->
-    <!-- <?php echo json_encode($_SESSION) ?> -->
+    <!-- <?= json_encode($this->cart->contents()); ?> -->
     <div class="row pt-4">
         <div class="col-7" style="padding-right: 0px; padding-left: 0px; border: 2px solid black; border-radius: 20px; height: fit-content;">
             <h5 class="pl-3 pt-3">Shipping address</h5>
@@ -31,10 +31,14 @@
                     foreach ($this->cart->contents() as $items) {
                         $subtotal = $items['price'] * $items['qty'];
                         $total = $total + $subtotal;
+                        if ($items['options']['type'] == 'sablon' && $items['qty'] == 50) {
+                            $total = $total + 50000;
+                        }
+                        if ($items['options']['ukuran_sablon'] == 'besar') {
+                            $total = $total + 100000;
+                        }
                     }
                     $this->session->set_userdata('grand_total', $total);
-                    // echo json_encode($itemcontent);
-                    // $this->session->set_userdata('order_type', $total);
                     ?>
                     <p><?= 'IDR ' . number_format($total, 0, '', '.') ?></p>
                 </div>
@@ -92,13 +96,22 @@
                         <img class="rounded my-2" src="<?= base_url() ?>/assets/img/produk/<?= $items['options']['gambar'] ?>" style="width: 150px;" alt="">
                     </div>
                     <div class="col-5">
-                        <p><?= $items['name'] . ' ' . $this->session->userdata('product_type') ?></p>
+                        <p><?= $items['name'] . ' ' . $items['options']['type'] ?></p>
                         <p><?= $items['options']['ukuran'] ?></p>
                         <p><?= $items['qty'] . ' pcs' ?></p>
                     </div>
                     <div class="col-3 text-right">
                         <a href="<?= base_url('cart/clear_cart/' . $items['rowid']) ?>"><i class="far fa-trash-alt"></i></a>
-                        <p class="mt-3"><?= 'IDR ' . number_format(($items['price'] * $items['qty']), 0, '', '.') ?></p>
+                        <?php
+                        $total = ($items['price'] * $items['qty']);
+                        if ($items['options']['type'] == 'sablon' && $items['qty'] == 50) {
+                            $total = $total + 50000;
+                        }
+                        if ($items['options']['ukuran_sablon'] == 'besar') {
+                            $total = $total + 100000;
+                        }
+                        ?>
+                        <p class="mt-3"><?= 'IDR ' . number_format($total, 0, '', '.') ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>

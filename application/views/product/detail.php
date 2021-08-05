@@ -42,6 +42,9 @@
                         </div>
                     </div>
                     <br>
+                    <h5>Total</h5>
+                    <input type="hidden" id="total" name="harga" value="<?= $p->harga ?>">
+                    <p id='display_total' style="font-weight: bold;"></p>
                     <input type="hidden" name="id" value="<?= $p->id ?>">
                     <!-- 2. Iki -->
                     <button class="btn btn-primary p-2" style="font-size: 12pt"><i class="fas fa-cart-plus " style="font-size: 12pt;"></i> ORDER NOW !</button>
@@ -52,8 +55,11 @@
         </div>
     <?php endforeach; ?>
     <script>
-        // var min_qty = $('#jumlah').val()
+        var min_qty = $('#jumlah').val()
         var default_harga = $('#harga').val()
+        var total = min_qty * default_harga
+
+        $('#display_total').append(formatRupiah(total, 'IDR '))
 
         $('#jumlah').change(function() {
             // var harga = $('#harga').data('default')
@@ -66,31 +72,44 @@
             if (qty >= 100 && qty < 200) {
                 $('#harga_sablon_logo').val(0)
                 $('#display_harga').html(formatRupiah($('#harga').val(), 'IDR '))
+                total = $('#harga').val() * qty;
+                $('#display_total').html(formatRupiah(total, 'IDR '))
             } else if (qty >= 200 && qty < 300) {
                 $('#harga_sablon_logo').val(0)
                 $('#harga').val(default_harga - 500)
                 $('#display_harga').html(formatRupiah($('#harga').val(), 'IDR '))
+                total = $('#harga').val() * qty;
+                $('#display_total').html(formatRupiah(total, 'IDR '))
             } else if (qty >= 300 && qty < 400) {
                 $('#harga_sablon_logo').val(0)
                 $('#harga').val(default_harga - 650)
                 $('#display_harga').html(formatRupiah($('#harga').val(), 'IDR '))
+                total = $('#harga').val() * qty;
+                $('#display_total').html(formatRupiah(total, 'IDR '))
             } else if (qty >= 400 && qty < 500) {
                 $('#harga_sablon_logo').val(0)
                 $('#harga').val(default_harga - 750)
                 $('#display_harga').html(formatRupiah($('#harga').val(), 'IDR '))
+                total = $('#harga').val() * qty;
+                $('#display_total').html(formatRupiah(total, 'IDR '))
             } else if (qty >= 500) {
                 $('#harga_sablon_logo').val(0)
                 $('#harga').val(default_harga - 800)
                 $('#display_harga').html(formatRupiah($('#harga').val(), 'IDR '))
+                total = $('#harga').val() * qty;
+                $('#display_total').html(formatRupiah(total, 'IDR '))
             } else {
                 $('#harga').val(default_harga)
                 $('#harga_sablon_logo').val(50000)
                 $('#display_harga').html(formatRupiah($('#harga').val(), 'IDR '))
+                total = $('#harga').val() * qty;
+                $('#display_total').html(formatRupiah(total, 'IDR '))
             }
         });
 
         function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            var
+                number_string = angka.toString(),
                 split = number_string.split(','),
                 sisa = split[0].length % 3,
                 rupiah = split[0].substr(0, sisa),

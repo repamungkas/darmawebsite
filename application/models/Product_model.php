@@ -9,17 +9,12 @@ class Product_model extends CI_Model
     public $gambar;
     public $ukuran;
     public $harga;
-    public $stok;
 
 
     public function __construct()
     {
         parent::__construct();
         $this->load->helper('url');
-        $this->proTable = 'product';
-        $this->cusTable = 'customers';
-        $this->ordTable = 'orders';
-        $this->ordDetailTable = 'order_detail';
     }
 
 
@@ -30,7 +25,7 @@ class Product_model extends CI_Model
         $this->gambar = 'default.jpg';
         $this->ukuran = htmlspecialchars($this->input->post('ukuran'));
         $this->harga = $this->input->post('harga');
-        $this->stok = $this->input->post('stok');
+        $this->sku = $this->input->post('sku');
 
         $this->db->insert('product', $this);
         $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">
@@ -78,5 +73,11 @@ class Product_model extends CI_Model
     {
         $query = $this->db->get('status_pemesanan');
         return $query->result();
+    }
+
+    public function edit_produk($id)
+    {
+        $query = $this->db->get_where('product', array('id' => $id));
+        return $query->result_array();
     }
 }

@@ -41,8 +41,6 @@ class Product extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-
-
     public function detail($id)
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
@@ -57,67 +55,59 @@ class Product extends CI_Controller
     public function add_cart($product_type)
     {
         $id = $this->input->post('id');
-        if ($this->session->has_userdata('product_type') == null || $this->session->userdata('product_type') == 'polos') {
-            $this->session->set_userdata('product_type', $product_type);
-            // $type = $product_type;
-            $barang = $this->pm->get_whereproduct($id);
-            $qty = $this->input->post('jumlah');
-            $harga = $this->input->post('harga');
-            $harga_sablon_logo = $this->input->post('harga_sablon_logo');
+        $this->session->set_userdata('product_type', $product_type);
+        $barang = $this->pm->get_whereproduct($id);
+        $qty = $this->input->post('jumlah');
+        $harga = $this->input->post('harga');
+        $upload_data = $this->uploaddesign();
+        if (!$upload_data == null) {
+            $data = array(
+                'id' => $barang->id,
+                'qty' => $qty,
+                'price' => $harga,
+                'name' => $barang->nama . " " . $barang->model_produk,
+                'options' => array('ukuran' => $barang->ukuran, 'gambar' => $barang->gambar, 'type' => $product_type, 'ukuran_sablon' => $this->input->post('ukuran_sablon'), 'warna' => $this->input->post('warna'), 'area_sablon' => $this->input->post('area_sablon'), 'sablon_data' => $upload_data)
+            );
 
-            echo $id . " " . $qty;
+            $this->cart->insert($data);
+        } else {
 
             $data = array(
                 'id' => $barang->id,
                 'qty' => $qty,
                 'price' => $harga,
-                'price_additional' => $harga_sablon_logo,
                 'name' => $barang->nama . " " . $barang->model_produk,
-                'options' => array('ukuran' => $barang->ukuran, 'gambar' => $barang->gambar)
+                'options' => array('ukuran' => $barang->ukuran, 'gambar' => $barang->gambar, 'type' => $product_type, 'ukuran_sablon' => $this->input->post('ukuran_sablon'), 'warna' => $this->input->post('warna'), 'area_sablon' => $this->input->post('area_sablon'), 'sablon_data' => $upload_data)
             );
-
             $this->cart->insert($data);
-        } else {
-            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
-            Selesaikan pesanan produk sablon anda !  </div>');
         }
+
         $this->load->view('templates/header');
-        redirect('product/detail/' . $id);
+        if ($product_type == 'sablon') {
+            redirect('product/detailsablon/' . $id);
+        } else {
+            redirect('product/detail/' . $id);
+        }
     }
 
-    // khusus produk sablon
-    public function addcartsablon($product_type)
+    public function uploaddesign()
     {
-        $id = $this->input->post('id');
-        if ($this->session->has_userdata('product_type') == null || $this->session->userdata('product_type') == 'sablon') {
-            $this->session->set_userdata('product_type', $product_type);
-            // $type = $product_type;
-            $barang = $this->pm->get_whereproduct($id);
-            $qty = $this->input->post('jumlah');
-            $harga = $this->input->post('harga');
-            $harga_sablon_logo = $this->input->post('harga_sablon_logo');
+        $config['upload_path']          = './assets/design';
+        $config['allowed_types']        = 'gif|jpg|png|ai|cdr|ps|pdf';
+        $config['max_size']             = 10000;
+        $config['max_width']            = 10000;
+        $config['max_height']           = 10000;
 
-            echo $id . " " . $qty;
+        $this->load->library('upload', $config);
 
-            $data = array(
-                'id' => $barang->id,
-                'qty' => $qty,
-                'price' => $harga,
-                'price_additional' => $harga_sablon_logo,
-                'name' => $barang->nama . " " . $barang->model_produk,
-                'options' => array('ukuran' => $barang->ukuran, 'gambar' => $barang->gambar)
-            );
-
-            $this->cart->insert($data);
+        if (!$this->upload->do_upload('userfile')) {
+            echo "Gagal Tambah";
         } else {
-            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">
-            Selesaikan pesanan produk polos anda !  </div>');
+            $file = $this->upload->data();
+            $filedesain = $file['file_name'];
+
+
+            return $filedesain;
         }
-
-        $this->load->view('templates/header');
-        redirect('product/detailsablon/' . $id);
     }
-
-    // Aku nyoba nggae function anyar
-
 }

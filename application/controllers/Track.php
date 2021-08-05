@@ -35,7 +35,7 @@ class Track extends CI_Controller
         }
     }
 
-    public function set_active_order($id)
+    public function active_order($id)
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
@@ -44,7 +44,7 @@ class Track extends CI_Controller
             'customer_id' => $data['user']['id']
         ])->result_array();
 
-        $this->db->select('order_detail.id, order_detail.order_id, product.nama, product.model_produk, order_detail.pcs, order_detail.subtotal');
+        $this->db->select('order_detail.id, order_detail.order_id, product.nama, product.model_produk, order_detail.pcs, order_detail.subtotal, order.order_status');
         $this->db->from('order_detail');
         $this->db->join('product', 'order_detail.produk_id = product.id');
         $this->db->join('order', 'order_detail.order_id = order.id');
@@ -54,6 +54,8 @@ class Track extends CI_Controller
         $data['active_order'] = $this->db->get_where('order_detail', [
             'order_id' => $id
         ])->result_array();
+
+        $data['payment'] = $this->db->get_where('payment', ['order_id' => $id])->row_array();
 
         // echo json_encode($data['active_order']);
 

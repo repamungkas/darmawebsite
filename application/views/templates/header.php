@@ -75,9 +75,8 @@
             ?>
           <li class="menu-has-children"><a href="<?= base_url('home'); ?>"><?= $user['name'] ?></a>
             <ul>
-              <li><a href="#">My Account</a></li>
-              <li><a href="#">Order History</a></li>
-              <li><a href="<?= base_url('payment/confirmation') ?>">Payment Confirmation</a></li>
+              <!-- <li><a href="#">Order History</a></li> -->
+              <!-- <li><a href="<?= base_url('payment/confirmation') ?>">Payment Confirmation</a></li> -->
               <li><a href="<?= base_url('track') ?>">Track Order</a></li>
               <li><a href="<?= base_url('auth/logout'); ?>">Logout</a></li>
             </ul>

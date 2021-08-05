@@ -150,7 +150,10 @@
                         </td>
                         <td>
                             <a href="#" class="edit" data-toggle="modal" data-target="#edituserModal" id_user="<?= $u->id ?>"><i class="material-icons">&#xE254;</i></a>
-                            <a href="#" class="delete" data-toggle="modal" data-target="#deleteModal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                            <?php
+                            if ($u->role_id != 1) { ?>
+                                <a href="#" class="delete" data-toggle="modal" id_user="<?= $u->id ?>" data-target="#deleteModal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                            <?php } ?>
                         </td>
                     </tr>
                     <?php $i++; ?>
@@ -169,11 +172,14 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">Select "Delete" below if you sure to delete this user.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="<?= base_url('admin/delete_user/') . $u->id ?>">Delete</a>
-                    </div>
+                    <form action="<?= base_url('admin/deleteuser') ?>" method="post">
+                        <input type="hidden" id="id_user" name="id_user">
+                        <div class="modal-body">Select "Delete" below if you sure to delete this user.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary">Delete</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -192,7 +198,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="<?= base_url('admin/edit_user') ?>" class="needs-validation" novalidate>
+                <form class="needs-validation" method="post" action="<?= base_url('admin/doedit') ?>" novalidate>
                     <input type="hidden" name="id_usr" id="id_usr" value="">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
@@ -229,9 +235,9 @@
                                 <option value="1">Admin</option>
                                 <option value="2">User</option>
                             </select>
-                        </div> 
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary ">Save</button>
+                    <button type="submit" id="save_button" class="btn btn-primary ">Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
             </div>
@@ -263,5 +269,26 @@
             }
         })
     })
-</script>
 
+    $(".delete").off().on('click', function() {
+        console.log($(this).attr('id_user'));
+        $('#id_user').val($(this).attr('id_user'));
+    })
+
+    // $('#save_button').on('click', function() {
+    //     $.ajax({
+    //         url: '<?= base_url('admin/doedit/') ?>',
+    //         type: 'post',
+    //         data: {
+    //             name: $('#edit_name').val(),
+    //             address: $('#edit_address').val(),
+    //             email: $('#edit_email').val(),
+    //             nohandphone: $('#edit_nohandphone').val(),
+    //             role_id: $('#edit_role_id').val(),
+    //         },
+    //         success: function(result) {
+    //             console.log(result);
+    //         }
+    //     })
+    // })
+</script>

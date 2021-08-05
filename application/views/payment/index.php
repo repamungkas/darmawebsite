@@ -2,7 +2,7 @@
     <h3 style="text-align: center; font-weight: bold;">Payment</h3>
     <p style="text-align: center; margin-top: 50px;">Please complete the payment immediately so that the order can be processed </p>
     <div class="container" style="border: 1px solid black; border-radius: 20px; width: 60%;">
-        <h5 class="mt-3">Order Number : 68686886</h5>
+        <h5 class="mt-3">Order Number : <?= $this->session->userdata('order_number')  ?></h5>
         <hr>
         <div class="row">
             <div class="col-sm">
