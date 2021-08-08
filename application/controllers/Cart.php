@@ -13,13 +13,14 @@ class Cart extends CI_Controller
 
     public function index()
     {
-        // echo json_encode($this->cart->contents());
-
         if ($this->session->has_userdata('role_id')) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         } else {
             $data['user'] = array();
         }
+
+        $data['province'] = $this->shipping_get_province();
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/include_js');
         $this->load->view('cart/index', $data);
@@ -53,7 +54,6 @@ class Cart extends CI_Controller
         } else {
             $data['user'] = array();
         }
-
         $this->load->view('templates/header');
         $this->load->view('templates/include_js1');
         $this->load->view('cart/checkout', $data);
@@ -67,5 +67,45 @@ class Cart extends CI_Controller
         echo '<pre>';
         print_r($data);
         echo '</pre>';
+    }
+
+    public function shipping_get_province()
+    {
+        $curl = curl_init();
+        $provinces = [];
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "key: 58a4e641443959d6488c2b5eed119bdc"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        $data = json_decode($response, true);
+
+        // echo json_encode($data['rajaongkir']['results']);
+
+        // foreach ($response as $items) {
+        //     echo $items;
+        // }
+
+        return $data['rajaongkir']['results'];
+    }
+
+    public function shipping_get_city()
+    {
+        echo 'get city';
     }
 }

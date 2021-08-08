@@ -13,7 +13,7 @@ class Home extends CI_Controller
         $loginstatus = $this->session->userdata('email');
         if (isset($loginstatus)) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-            if ($data['user']['role_id'] != 2) {
+            if ($data['user']['role_id'] >= 1 && $data['user']['role_id'] <= 2) {
                 redirect('admin', 'refresh');
             }
             $data['title'] = 'Darmabox Store';

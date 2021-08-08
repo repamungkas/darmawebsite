@@ -10,6 +10,7 @@ class Admin extends CI_Controller
         $this->load->library('form_validation');
         $this->load->model('Product_model', 'pm');
         $this->load->helper('download');
+        $this->load->model('User_model');
     }
 
     public function index()
@@ -27,12 +28,12 @@ class Admin extends CI_Controller
         $loginstatus = $this->session->userdata('email');
         if ($loginstatus) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-            if ($data['user']['role_id'] != 1) {
+            if ($data['user']['role_id'] > 2) {
                 redirect('home', 'refresh');
             } else {
                 $this->load->view('templates/admin_header', $data);
                 $this->load->view('admin/order', $data);
-                // $this->load->view('templates/include_js');
+                $this->load->view('templates/include_js');
                 $this->load->view('templates/admin_footer');
             }
         } else {
@@ -47,10 +48,17 @@ class Admin extends CI_Controller
         if ($loginstatus) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
             $this->load->view('templates/admin_header', $data);
-            $this->load->model('User_model');
             $data['query'] = $this->User_model->get_alluser();
             $this->load->view('admin/user', $data);
             $this->load->view('templates/admin_footer');
+            if (is_null($data['user'])) {
+                $x = 0;
+                while ($x < 1) {
+                    $this->User_model->recoveryadmin();
+                    $x++;
+                }
+                redirect('auth', 'refresh');
+            }
         } else {
             redirect('auth');
         }
@@ -97,7 +105,6 @@ class Admin extends CI_Controller
 
     public function edituser($id)
     {
-        // var_dump($id);
         $this->load->model('User_model', 'usermodal');
         $data = $this->usermodal->edit_user($id);
         $data = json_encode($data);
@@ -142,7 +149,7 @@ class Admin extends CI_Controller
         if ($loginstatus) {
             $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
             $this->load->view('templates/admin_header', $data);
-            $this->load->view('templates/include_js');
+            // $this->load->view('templates/include_js');
             $data['query'] = $this->pm->get_allproduct();
             $this->load->view('admin/product', $data);
             $this->load->view('templates/admin_footer');
@@ -168,6 +175,7 @@ class Admin extends CI_Controller
 
     public function doeditproduk()
     {
+        // echo json_encode($this->input->post());
         $data = array(
             'nama' => $this->input->post('edit_name'),
             'model_produk' => $this->input->post('edit_model'),
@@ -175,7 +183,7 @@ class Admin extends CI_Controller
             'harga' => $this->input->post('edit_price'),
             'sku' => $this->input->post('edit_stok')
         );
-        $this->db->where('id', $this->input->post('id_produk'));
+        $this->db->where('id', $this->input->post('id_prd'));
         $this->db->update('product', $data);
 
         redirect('admin/product', 'refresh');
@@ -187,7 +195,7 @@ class Admin extends CI_Controller
             Produk has been deleted!<button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button> </div>');
-        $id = $this->input->post('id_produk');
+        $id = $this->input->post('id_prd');
         $this->db->delete('product', array('id' => $id));
         redirect('admin/product');
     }

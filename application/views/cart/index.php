@@ -2,6 +2,7 @@
     <h3 style="text-align: center; font-weight: bold;">Cart</h3>
     <!-- <?php echo json_encode($this->session->userdata('product_type')) ?> -->
     <!-- <?= json_encode($this->cart->contents()); ?> -->
+    <!-- <?= json_encode($province); ?> -->
     <div class="row pt-4">
         <div class="col-7" style="padding-right: 0px; padding-left: 0px; border: 2px solid black; border-radius: 20px; height: fit-content;">
             <h5 class="pl-3 pt-3">Shipping address</h5>
@@ -12,7 +13,7 @@
             ?>
             <?php } else { ?>
                 <p class="pl-3 pt-2">No shipping address has been yet</p>
-                <a href="" class="pl-3 pt-2" style="font-weight: bold;">Add address</a>
+                <!-- <a href="" class="pl-3 pt-2" style="font-weight: bold;">Add address</a> -->
             <?php } ?>
             <!-- <a href="<?= base_url() ?>cart/clear_cart" class="btn btn-danger pt-2 pb-2" style="float: right;"><i class="far fa-trash-alt" style="font-size: 16pt;"></i></a> -->
         </div>
@@ -117,23 +118,24 @@
             </div>
         </div>
     </div>
-
-
-    <!-- <a class="btn btn-success checkout" href="<?= base_url('cart/checkout') ?>">Checkout</a> -->
-    <!-- <a href="https://wa.me/+6282257537871?text=Saya%20tertarik%20dengan%20mobil%20Anda%20yang%20dijual%0Aini%20baris2" class="btn btn-success" target="_blank">Checkout</a> -->
-    <!-- <a href="<?= base_url() ?>cart/checkout" class="btn btn-success">Checkout</a> -->
-    <script>
-        $('.checkout').click(function() {
-            var nama = $('#nama').val()
-            var email = $('#email').val()
-            var alamat = $('#alamat').val()
-            var no_hp = $('#no_hp').val()
-            var output = 'Nama %3A ' + nama + ' %0A' +
-                'Email %3A ' + email + ' %0A' +
-                'No hp %3A ' + no_hp + ' %0A' +
-                'Alamat %3A ' + alamat + ' %0A%0A' +
-                '<?= $output ?>'
-            location.href = 'https://wa.me/+6282257537871?text=' + output
-        })
-    </script>
 </div>
+
+<script>
+    $('.checkout').click(function() {
+        var nama = $('#nama').val()
+        var email = $('#email').val()
+        var alamat = $('#alamat').val()
+        var no_hp = $('#no_hp').val()
+        var output = 'Nama %3A ' + nama + ' %0A' +
+            'Email %3A ' + email + ' %0A' +
+            'No hp %3A ' + no_hp + ' %0A' +
+            'Alamat %3A ' + alamat + ' %0A%0A' +
+            '<?php $output ?>'
+        location.href = 'https://wa.me/+6282257537871?text=' + output
+    })
+
+    $('#provinsi').change(function() {
+        console.log('change province')
+        <?php base_url('cart/shipping_get_city') ?>
+    });
+</script>

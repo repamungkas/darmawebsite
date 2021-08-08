@@ -60,10 +60,9 @@
         <ul class="nav-menu">
           <li class="<?php if ($this->uri->segment(1) == "") {
                         echo "menu-active";
-                      } ?>"><a href="<?= base_url(); ?>">Home</a></li>
-          <li><a href="<?= base_url('product') ?>">Shop</a></li>
-          <!-- <li><a href=" <?= base_url('cart') ?> ">Cart <sup><?php $keranjang = $this->cart->total_items(); ?> <?php echo $keranjang ?></sup> </a></li> -->
-          <li><a href=" <?= base_url('cart') ?> ">Cart <sup><?php $keranjang = count($this->cart->contents()); ?> <?php echo $keranjang ?></sup> </a></li>
+                      } ?>"><a style="font-weight: bold;" href="<?= base_url(); ?>">Home</a></li>
+          <li><a style="font-weight: bold;" href="<?= base_url('product') ?>">Shop</a></li>
+          <li><a style="font-weight: bold;" href=" <?= base_url('cart') ?> ">Cart <sup><?php $keranjang = count($this->cart->contents()); ?> <?php echo $keranjang ?></sup> </a></li>
           <li class="
             <?php
             if ($this->uri->segment(1) == "auth") {
@@ -83,7 +82,7 @@
           </li>
         <?php
             } else {
-              echo "<a href=" . base_url('auth') . ">Login</a>";
+              echo "<a style='font-weight: bold;' href=" . base_url('auth') . ">Login</a>";
             }
         ?>
         </li>

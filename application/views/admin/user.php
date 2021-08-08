@@ -20,6 +20,8 @@
 </script>
 
 <div class="container">
+    <!-- <?php echo $user['role_id']; ?> -->
+    <?php echo json_encode($user); ?>
     <div class="table-responsive">
         <div class="table-title">
             <div class="row">
@@ -142,16 +144,18 @@
                         <td>
                             <?php
                             if ($u->role_id == 1) {
+                                echo 'Super Admin';
+                            } else if ($u->role_id == 2) {
                                 echo 'Admin';
                             } else {
-                                echo 'User';
+                                echo 'Member';
                             }
                             ?>
                         </td>
                         <td>
                             <a href="#" class="edit" data-toggle="modal" data-target="#edituserModal" id_user="<?= $u->id ?>"><i class="material-icons">&#xE254;</i></a>
                             <?php
-                            if ($u->role_id != 1) { ?>
+                            if ($u->role_id > 2) { ?>
                                 <a href="#" class="delete" data-toggle="modal" id_user="<?= $u->id ?>" data-target="#deleteModal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                             <?php } ?>
                         </td>
@@ -228,15 +232,18 @@
                             Please provide no handphone !
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Role</label>
+                    <?php if ($user['role_id'] == 1) { ?>
                         <div class="form-group">
-                            <select class="form-control" id="edit_role_id" name="edit_role_id">
-                                <option value="1">Admin</option>
-                                <option value="2">User</option>
-                            </select>
+                            <label for="exampleInputEmail1">Role</label>
+                            <div class="form-group">
+                                <select class="form-control" id="edit_role_id" name="edit_role_id">
+                                    <option value="2">Administrator</option>
+                                    <option value="3">User</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    <?php } else {
+                    } ?>
                     <button type="submit" id="save_button" class="btn btn-primary ">Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </form>
@@ -245,7 +252,7 @@
     </div>
 </div>
 
-<?php $this->load->view('templates/include_js.php'); ?>
+<!-- <?php $this->load->view('templates/include_js.php'); ?> -->
 
 <script type="text/javascript">
     // console.log('beads');

@@ -57,4 +57,18 @@ class User_model extends CI_Model
         $query = $this->db->get_where('user', array('id' => $id));
         return $query->result_array();
     }
+
+    public function recoveryadmin()
+    {
+        $this->name = 'Super Admin';
+        $this->address = 'Malang';
+        $this->email = 'superadmin@gmail.com';
+        $this->nohandphone = 'default';
+        $this->password = password_hash('12345678', PASSWORD_DEFAULT);
+        $this->role_id = 1;
+        $this->is_active = 1;
+        $this->date_created = time();
+
+        $this->db->insert('user', $this);
+    }
 }

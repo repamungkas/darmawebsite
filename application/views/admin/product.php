@@ -155,7 +155,7 @@
     </div>
 </div>
 
-<!-- edit model -->
+<!-- edit modal -->
 
 <div class="modal fade" id="editprodukModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -168,7 +168,7 @@
             </div>
             <div class="modal-body">
                 <form class="needs-validation" method="post" action="<?= base_url('admin/doeditproduk') ?>" novalidate>
-                    <input type="hidden" name="id_produk" id="id_produk" value="">
+                    <input type="text" name="id_prd" id="id_prd" value="">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Name</label>
                         <input type="text" class="form-control" id="edit_name" name="edit_name" value="" aria-describedby="" placeholder="Enter name" required>
@@ -212,23 +212,23 @@
     </div>
 </div>
 
-<?php $this->load->view('templates/include_js.php'); ?>
+<!-- <?php $this->load->view('templates/include_js.php'); ?> -->
 
 <script type="text/javascript">
     // console.log('beads');
 
     $(".edit").off().on('click', function() {
-        $("#id_produk").val($(this).attr('id_produk'));
+        $("#id_prd").val($(this).attr('id_produk'));
     })
 
     $(".delete").off().on('click', function() {
         console.log($(this).attr('id_produk'));
-        $('#id_produk').val($(this).attr('id_produk'));
+        $('#id_prd').val($(this).attr('id_produk'));
     })
 
     $('#editprodukModal').on('shown.bs.modal', function() {
         $.ajax({
-            url: '<?= base_url('admin/editproduk/') ?>' + $("#id_produk").val(),
+            url: '<?= base_url('admin/editproduk/') ?>' + $("#id_prd").val(),
             type: 'get',
             success: function(result) {
                 var obj = jQuery.parseJSON(result);
