@@ -95,17 +95,67 @@ class Cart extends CI_Controller
 
         $data = json_decode($response, true);
 
-        // echo json_encode($data['rajaongkir']['results']);
-
-        // foreach ($response as $items) {
-        //     echo $items;
-        // }
-
         return $data['rajaongkir']['results'];
     }
 
-    public function shipping_get_city()
+    public function shipping_get_city($province_id)
     {
-        echo 'get city';
+        // header("Access-Control-Allow-Origin': *");
+        // header("content-type:application/json");
+        // "key: 58a4e641443959d6488c2b5eed119bdc"
+
+        // echo $province_id;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=" . $province_id,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+            "key: 58a4e641443959d6488c2b5eed119bdc"
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        echo $response;
+        
+        curl_close($curl);
+
+
+        // return $data['rajaongkir']['results'];
+    }
+
+    public function shipping_get_cost($origin, $destination, $courier, $weight)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => "origin=" . $origin . "&destination=" . $destination . "&weight=" . $weight . "&courier=" . $courier,
+        CURLOPT_HTTPHEADER => array(
+            "content-type: application/x-www-form-urlencoded",
+            "key: 58a4e641443959d6488c2b5eed119bdc"
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        echo $response;
+        
+        curl_close($curl);
     }
 }
